@@ -36,6 +36,8 @@ export const authApi = {
   register: (data) => api.post('/auth/register', data),
   getProfile: () => api.get('/auth/profile'),
   updateProfile: (data) => api.put('/auth/profile', data),
+    forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+  resetPassword: (token, password) => api.post(`/auth/reset-password?token=${token}`, { password }),
 }
 
 // ─── ENDPOINTS DE PRODUCTOS ────────────────────────────
@@ -64,6 +66,7 @@ export const ordersApi = {
   create: (data) => api.post('/orders', data),
   getMyOrders: () => api.get('/orders'),
   getById: (id) => api.get(`/orders/${id}`),
+  getAllAdmin: (params) => api.get('/orders/all', { params }),
 }
 
 // ─── ENDPOINTS DE PAGOS ────────────────────────────────

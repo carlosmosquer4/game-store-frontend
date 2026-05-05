@@ -8,6 +8,16 @@
         <p class="auth-sub">Accede a tu cuenta de Game Store Neiva</p>
       </div>
 
+            <!-- Banner cuenta verificada -->
+      <div class="alert alert-success" v-if="verifiedBanner">
+        ✅ ¡Cuenta verificada! Ya puedes iniciar sesión.
+      </div>
+
+      <!-- Banner error verificación -->
+      <div class="alert alert-error" v-if="errorBanner">
+        ❌ {{ errorBanner }}
+      </div>
+
       <form @submit.prevent="handleLogin" class="auth-form">
 
         <div class="field-group">
@@ -56,23 +66,10 @@
 
       </form>
 
-      <!-- Credenciales de prueba -->
-      <div class="demo-section">
-        <p class="demo-label">Credenciales de prueba:</p>
-        <div class="demo-btns">
-          <button
-            class="demo-btn"
-            @click="fillDemo('carlos@email.com', 'password123')"
-          >
-            👤 Cliente
-          </button>
-          <button
-            class="demo-btn"
-            @click="fillDemo('admin@ecommerce.com', 'admin123')"
-          >
-            ⚙️ Admin
-          </button>
-        </div>
+      <div class="forgot-link">
+        <router-link to="/forgot-password" class="auth-link">
+          ¿Olvidaste tu contraseña?
+        </router-link>
       </div>
 
       <div class="auth-footer">
@@ -87,7 +84,8 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { useCartStore } from '../stores/cart'
@@ -95,6 +93,9 @@ import { useCartStore } from '../stores/cart'
 const auth = useAuthStore()
 const cart = useCartStore()
 const router = useRouter()
+const route = useRoute()
+const verifiedBanner = ref(false)
+const errorBanner = ref('')
 
 const showPassword = ref(false)
 
@@ -103,18 +104,30 @@ const form = reactive({
   password: ''
 })
 
-async function handleLogin() {
-  const ok = await auth.login(form.email, form.password)
-  if (ok) {
-    // Cargar carrito después del login
-    await cart.fetchCart()
-    router.push('/')
+onMounted(() => {
+  const params = new URLSearchParams(window.location.search)
+  
+  if (params.get('verified') === 'true') {
+    verifiedBanner.value = true
   }
-}
+  if (params.get('error') === 'verificacion_fallida') {
+    errorBanner.value = 'El enlace es inválido o ha expirado'
+  }
+})
 
-function fillDemo(email, password) {
-  form.email = email
-  form.password = password
+async function handleLogin() {
+  try {
+    const ok = await auth.login(form.email, form.password)
+    if (ok) {
+      await cart.fetchCart()
+      router.push('/')
+    }
+  } catch (err) {
+    // El store maneja el error pero verificamos si es 403
+    if (err?.response?.status === 403) {
+      auth.error = 'Debes verificar tu correo antes de iniciar sesión'
+    }
+  }
 }
 </script>
 
@@ -212,36 +225,6 @@ function fillDemo(email, password) {
 }
 
 /* Demo */
-.demo-section {
-  border-top: 1px solid var(--color-border);
-  padding-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.demo-label {
-  font-size: 12px;
-  color: var(--color-text-muted);
-  text-align: center;
-}
-
-.demo-btns {
-  display: flex;
-  gap: 8px;
-}
-
-.demo-btn {
-  flex: 1;
-  padding: 8px;
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  font-size: 13px;
-  color: var(--color-text-light);
-  cursor: pointer;
-  transition: all 0.2s;
-}
 
 .demo-btn:hover {
   border-color: var(--color-primary);
@@ -263,5 +246,11 @@ function fillDemo(email, password) {
 
 .auth-link:hover {
   text-decoration: underline;
+}
+
+.forgot-link {
+  text-align: center;
+  font-size: 13px;
+  margin-top: -8px;
 }
 </style>

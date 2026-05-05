@@ -48,6 +48,35 @@ const routes = [
     path: '/contacto',
     component: () => import('../views/ContactView.vue'),
   },
+  {
+    path: '/admin',
+    component: () => import('../views/admin/AdminView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/productos/nuevo',
+    component: () => import('../views/admin/ProductFormView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/productos/editar/:id',
+    component: () => import('../views/admin/ProductFormView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/pedidos',
+    component: () => import('../views/admin/AdminOrdersView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/forgot-password',
+    component: () => import('../views/ForgotPasswordView.vue'),
+    meta: { guestOnly: true }
+  },
+  {
+    path: '/reset-password',
+    component: () => import('../views/ResetPasswordView.vue'),
+  },
 ]
 
 const router = createRouter({
@@ -66,6 +95,9 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     next('/login')
   } else if (to.meta.guestOnly && auth.isAuthenticated) {
+    next('/')
+  } else if (to.meta.requiresAdmin && !auth.isAdmin) {
+    // Si no es admin lo manda al home
     next('/')
   } else {
     next()

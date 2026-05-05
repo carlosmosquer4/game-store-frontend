@@ -67,6 +67,15 @@
             >
               📦 Mis Pedidos
             </router-link>
+            <!-- Solo visible para admin -->
+            <router-link
+              v-if="auth.isAdmin"
+              to="/admin"
+              class="dropdown-item"
+              @click="userMenuOpen = false"
+            >
+              ⚙️ Panel Admin
+            </router-link>
             <div class="dropdown-divider"></div>
             <button class="dropdown-item danger" @click="handleLogout">
               🚪 Cerrar Sesión
