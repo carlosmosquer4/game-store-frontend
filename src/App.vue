@@ -19,6 +19,7 @@
       </div>
     </transition>
 
+    <ChatbotUI />
   </div>
 </template>
 
@@ -28,6 +29,7 @@ import { useAuthStore } from './stores/auth'
 import { useCartStore } from './stores/cart'
 import AppNavbar from './components/AppNavbar.vue'
 import AppFooter from './components/AppFooter.vue'
+import ChatbotUI from './components/ChatbotUI.vue'
 
 const auth = useAuthStore()
 const cart = useCartStore()
