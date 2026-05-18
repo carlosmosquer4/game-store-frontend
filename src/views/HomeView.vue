@@ -54,6 +54,7 @@
       <div class="hero-bg">
         <div class="hero-circle hero-circle-1"></div>
         <div class="hero-circle hero-circle-2"></div>
+        <div class="hero-image-bg"></div>
       </div>
     </section>
 
@@ -440,6 +441,21 @@ onMounted(async () => {
   background: rgba(246, 137, 42, 0.06);
   bottom: 0;
   left: 30%;
+}
+
+.hero-image-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&q=80');
+  background-size: cover;
+  background-position: center left;
+  opacity: 0.18;
+  mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,1) 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,1) 100%);
+  pointer-events: none;
 }
 
 /* SECTIONS */

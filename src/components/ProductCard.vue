@@ -19,6 +19,10 @@
             -{{ product.discountPercentage }}%
           </span>
         </div>
+        <!-- Overlay de descripción al hacer hover -->
+        <div class="card-overlay" v-if="product.description">
+          <p class="card-overlay-text">{{ product.description }}</p>
+        </div>
       </div>
     </router-link>
 
@@ -227,6 +231,37 @@ function onImgError(e) {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  z-index: 2;
+}
+
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 20, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  backdrop-filter: blur(2px);
+}
+
+.product-card:hover .card-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-overlay-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.55;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Contenido */
