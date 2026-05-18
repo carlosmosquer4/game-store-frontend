@@ -110,7 +110,7 @@
             </router-link>
             <button
               class="btn btn-outline btn-sm danger"
-              @click="handleClear"
+              @click="showClearModal = true"
             >
               Vaciar carrito
             </button>
@@ -157,14 +157,31 @@
       </div>
 
     </div>
+
+    <!-- Modal confirmación vaciar carrito -->
+    <Transition name="modal">
+      <div class="modal-backdrop" v-if="showClearModal" @click.self="showClearModal = false">
+        <div class="modal-box">
+          <div class="modal-icon">🗑️</div>
+          <h3 class="modal-title">¿Vaciar el carrito?</h3>
+          <p class="modal-desc">Se eliminarán todos los productos. Esta acción no se puede deshacer.</p>
+          <div class="modal-actions">
+            <button class="btn btn-outline" @click="showClearModal = false">Cancelar</button>
+            <button class="btn btn-danger" @click="confirmClear">Sí, vaciar</button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useCartStore } from '../stores/cart'
 
 const cart = useCartStore()
+const showClearModal = ref(false)
 
 function getCategoryImage(categoryName) {
   const name = (categoryName || '').toLowerCase()
@@ -222,8 +239,8 @@ async function removeItem(itemId) {
   await cart.removeItem(itemId)
 }
 
-async function handleClear() {
-  if (!confirm('¿Vaciar el carrito?')) return
+async function confirmClear() {
+  showClearModal.value = false
   await cart.clearCart()
 }
 
@@ -534,6 +551,101 @@ onMounted(() => {
 .item-leave-to {
   opacity: 0;
   transform: translateX(20px);
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 16px;
+}
+
+.modal-box {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-icon {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.modal-desc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.modal-actions .btn {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.btn-danger {
+  background: var(--color-danger, #fc8181);
+  color: #0f0f13;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-danger:hover {
+  opacity: 0.85;
+}
+
+/* Transición del modal */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.modal-enter-active .modal-box,
+.modal-leave-active .modal-box {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from .modal-box,
+.modal-leave-to .modal-box {
+  transform: scale(0.95);
+  opacity: 0;
 }
 
 /* Responsive */
