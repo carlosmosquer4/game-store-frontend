@@ -185,14 +185,23 @@ const features = [
 // ─── CARGAR DATOS ────────────────────────────────────────
 async function loadData() {
   try {
-    // Cargar categorías y productos al mismo tiempo
     const [catRes, prodRes] = await Promise.all([
       categoriesApi.getAll(),
       productsApi.getAll({ featured: true, limit: 8 })
     ])
 
     categories.value = catRes.data.data.categories
-    featuredProducts.value = prodRes.data.data
+    let featured = prodRes.data.data
+
+    // Si no hay 8 destacados, completar con productos recientes
+    if (featured.length < 8) {
+      const extraRes = await productsApi.getAll({ limit: 16 })
+      const featuredIds = new Set(featured.map(p => p.id))
+      const extra = extraRes.data.data.filter(p => !featuredIds.has(p.id))
+      featured = [...featured, ...extra].slice(0, 8)
+    }
+
+    featuredProducts.value = featured
 
   } catch (err) {
     console.error('Error cargando datos del home:', err)
