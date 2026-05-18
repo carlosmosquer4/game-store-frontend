@@ -57,24 +57,32 @@
         <div class="filter-group">
           <label class="filter-label">Rango de precio</label>
           <div class="price-range">
-            <input
-              v-model.number="filters.minPrice"
-              type="number"
-              placeholder="Mínimo"
-              class="input"
-            />
-            <span>—</span>
-            <input
-              v-model.number="filters.maxPrice"
-              type="number"
-              placeholder="Máximo"
-              class="input"
-            />
+            <div class="price-field">
+              <span class="price-prefix">$</span>
+              <input
+                v-model.number="filters.minPrice"
+                type="number"
+                placeholder="Mínimo"
+                class="input price-input"
+                min="0"
+              />
+            </div>
+            <div class="price-separator">—</div>
+            <div class="price-field">
+              <span class="price-prefix">$</span>
+              <input
+                v-model.number="filters.maxPrice"
+                type="number"
+                placeholder="Máximo"
+                class="input price-input"
+                min="0"
+              />
+            </div>
           </div>
           <button
-            class="btn btn-outline btn-sm"
+            class="btn btn-primary btn-sm"
             @click="fetchProducts()"
-            style="width: 100%; margin-top: 8px;"
+            style="width: 100%; margin-top: 4px;"
           >
             Aplicar precio
           </button>
@@ -423,18 +431,35 @@ watch(() => route.query, (query) => {
 .price-range {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
-.price-range .input {
+.price-field {
   flex: 1;
-  padding: 8px 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.price-prefix {
+  position: absolute;
+  left: 10px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.price-input {
+  width: 100%;
+  padding: 10px 8px 10px 22px !important;
   font-size: 13px;
 }
 
-.price-range span {
+.price-separator {
   color: var(--color-text-muted);
   flex-shrink: 0;
+  font-size: 14px;
 }
 
 /* Toggle checkbox */

@@ -208,8 +208,10 @@ function formatPrice(price) {
 }
 
 function getProductImage(product) {
-  const url = product.imageUrl || ''
-  if (url.includes('unsplash') || url.includes('cloudinary')) return url
+  if (product.images?.length > 0 && product.images[0].imageUrl) {
+    return product.images[0].imageUrl
+  }
+  if (product.imageUrl) return product.imageUrl
   const name = (product.category?.name || '').toLowerCase()
   if (name.includes('raton') || name.includes('mouse')) {
     return 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=100&q=80'
