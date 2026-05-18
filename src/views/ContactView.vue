@@ -58,29 +58,6 @@
           </div>
         </div>
 
-        <!-- FAQ rápido -->
-        <div class="faq-section">
-          <p class="faq-title">Preguntas frecuentes</p>
-          <div class="faq-list">
-            <div
-              v-for="faq in faqs"
-              :key="faq.q"
-              class="faq-item"
-            >
-              <button
-                class="faq-question"
-                @click="faq.open = !faq.open"
-              >
-                <span>{{ faq.q }}</span>
-                <span>{{ faq.open ? '▲' : '▼' }}</span>
-              </button>
-              <div class="faq-answer" v-if="faq.open">
-                {{ faq.a }}
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <!-- Formulario de contacto -->
@@ -182,29 +159,6 @@ const form = reactive({
   message: ''
 })
 
-// FAQs con estado de open/close
-const faqs = reactive([
-  {
-    q: '¿Hacen envíos a toda Colombia?',
-    a: 'Sí, hacemos envíos a todos los municipios de Colombia. El tiempo de entrega es de 3 a 5 días hábiles para ciudades principales.',
-    open: false
-  },
-  {
-    q: '¿Cuál es la política de devoluciones?',
-    a: 'Tienes 30 días desde la fecha de compra para solicitar una devolución. El producto debe estar en su empaque original y sin uso.',
-    open: false
-  },
-  {
-    q: '¿Los productos tienen garantía?',
-    a: 'Todos nuestros productos tienen garantía de fábrica. El tiempo varía según el fabricante, generalmente entre 6 meses y 1 año.',
-    open: false
-  },
-  {
-    q: '¿Qué métodos de pago aceptan?',
-    a: 'Aceptamos tarjeta crédito/débito, PSE, PayPal, transferencia bancaria y pago contraentrega.',
-    open: false
-  },
-])
 
 async function handleSubmit() {
   sending.value = true
@@ -336,60 +290,6 @@ function resetForm() {
 .social-btn:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
-}
-
-/* FAQ */
-.faq-section {
-  border-top: 1px solid var(--color-border);
-  padding-top: 20px;
-}
-
-.faq-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text-light);
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.faq-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.faq-item {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.faq-question {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 12px 14px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text);
-  background: var(--color-bg-elevated);
-  text-align: left;
-  gap: 8px;
-  transition: background 0.2s;
-}
-
-.faq-question:hover {
-  background: var(--color-bg-card);
-}
-
-.faq-answer {
-  padding: 12px 14px;
-  font-size: 13px;
-  color: var(--color-text-muted);
-  line-height: 1.7;
-  border-top: 1px solid var(--color-border);
 }
 
 /* Formulario */

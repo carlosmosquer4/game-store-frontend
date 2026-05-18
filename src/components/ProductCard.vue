@@ -95,18 +95,11 @@ const adding = ref(false)
 const productImage = computed(() => {
   if (props.product.images?.length > 0) {
     const url = props.product.images[0].imageUrl
-    // Si la URL es de unsplash o cloudinary la usamos directo
-    if (url.includes('unsplash') || url.includes('cloudinary')) {
-      return url
-    }
+    if (url) return url
   }
   if (props.product.imageUrl) {
-    const url = props.product.imageUrl
-    if (url.includes('unsplash') || url.includes('cloudinary')) {
-      return url
-    }
+    return props.product.imageUrl
   }
-  // Fallback con imagen según categoría
   return getCategoryImage(props.product.category?.name)
 })
 
