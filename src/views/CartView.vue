@@ -196,10 +196,10 @@ function getCategoryImage(categoryName) {
 }
 
 function getProductImage(product) {
-  if (product.imageUrl && product.imageUrl.includes('unsplash')) {
-    return product.imageUrl
+  if (product.images?.length > 0 && product.images[0].imageUrl) {
+    return product.images[0].imageUrl
   }
-  if (product.imageUrl && product.imageUrl.includes('cloudinary')) {
+  if (product.imageUrl) {
     return product.imageUrl
   }
   return getCategoryImage(product.category?.name)
